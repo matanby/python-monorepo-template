@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "python-monorepo-template"
+version = "0.1.0"
+description = ""
+authors = []
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+select = [
+    "E",    # pycodestyle
+    "F",    # pyflakes
+    "W",    # pycodestyle (warnings)
+    "I",    # isort
+    "N",    # pep8-naming
+    "UP",   # pyupgrade
+    "ANN",  # flake8-annotations
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "COM",  # flake8-commas
+    "C4",   # flake8-comprehensions
+    "DTZ",  # flake8-datetimez
+    "EXE",  # flake8-executable
+    "PIE",  # flake8-pie
+    "T20",  # flake8-print
+    "PT",   # flake8-pytest
+    "SIM",  # flake8-simplify
+    "ARG",  # flake8-unused-arguments
+    "PTH",  # flake8--use-pathlib
+    "ERA",  # flake8-eradicate
+    "RUF",  # ruff specific rules
+    "PL",   # pylint
+]
+ignore = [
+    "ANN101", # Missing type annotation for self in method
+    "ANN204", # Missing type annotation for special method
+]
+line-length = 100
+target-version = "py311"

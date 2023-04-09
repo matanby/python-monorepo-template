@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "<PACKAGE-NAME>"
+version = "0.1.0"
+description = ""
+authors = []
+packages = [{include = "<PACKAGE_NAME>", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+pre-commit = "*"
+pytest = "*"
+ruff = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
