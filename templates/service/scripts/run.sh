@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-poetry run python src/run.py
+ARGS="$@"
+poetry run python src/run.py $ARGS

@@ -1,14 +1,14 @@
 install:  ## Install the package
-	@bash scripts/install.sh
+	@bash scripts/install.sh $(args)
 
 format:  ## Format the code
-	@bash scripts/format.sh
+	@bash scripts/format.sh $(args)
 
 lint:  ## Lint the code
-	@bash scripts/lint.sh
+	@bash scripts/lint.sh $(args)
 
 test:  ## Run the tests
-	@bash scripts/test.sh
+	@bash scripts/test.sh $(args)
 
 .PHONY: help
 help:

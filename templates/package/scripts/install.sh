@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-
-poetry install
+ARGS=$@
+poetry install $ARGS

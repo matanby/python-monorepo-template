@@ -1,0 +1,41 @@
+name: Validate Code
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_path:
+        description: 'The path of the package or service to validate'
+        required: true
+
+jobs:
+  validate_code:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Poetry
+      run: pip install poetry
+
+    - name: Install Dependencies
+      run: poetry install
+      working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
+
+    - name: Lint
+      run: make -f Makefile lint
+      working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
+
+    - name: Format
+      run: make -f Makefile format args="--check"
+      working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
+
+    - name: Test
+      run: make -f Makefile test
+      working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
