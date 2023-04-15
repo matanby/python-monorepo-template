@@ -1,0 +1,20 @@
+name: Test All Services and Packages
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+#    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  Test-All-Services-And-Packages:
+    strategy:
+      matrix:
+        target_path:
+          - services/api_service
+          - packages/common_package
+
+    uses: ./.github/workflows/test_service_or_package.yaml
+    with:
+      target_path: ${{ matrix.target_path }}

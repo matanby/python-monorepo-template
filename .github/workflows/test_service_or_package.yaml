@@ -2,9 +2,11 @@ name: Validate Code
 
 on:
   workflow_dispatch:
+  workflow_call:
     inputs:
       target_path:
         description: 'The path of the package or service to validate'
+        type: string
         required: true
 
 jobs:
@@ -33,7 +35,7 @@ jobs:
       working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
 
     - name: Format
-      run: make -f Makefile format
+      run: make -f Makefile format args="--check"
       working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
 
     - name: Test
