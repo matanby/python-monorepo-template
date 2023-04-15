@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "common-package"
+version = "0.1.0"
+description = ""
+authors = []
+packages = [{include = "common_package", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+pre-commit = "*"
+pytest = "*"
+ruff = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
