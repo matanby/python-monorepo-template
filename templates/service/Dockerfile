@@ -1,32 +1,19 @@
-FROM python:3.11
+# syntax=docker/dockerfile:1
+FROM python:3.14-slim-trixie AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.13.4 /uv /usr/local/bin/uv
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=never
+WORKDIR /app
+# Build with the repository root as context so workspace dependencies are available.
+COPY . .
+# Optional CA secret supports builds behind an HTTPS proxy.
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=secret,id=proxy_ca \
+    if [ -f /run/secrets/proxy_ca ]; then export SSL_CERT_FILE=/run/secrets/proxy_ca; fi; \
+    uv sync --locked --no-dev --no-editable --package "<SERVICE-NAME>"
 
-# install Poetry
-RUN pip install --no-cache-dir poetry
-
-# set the home directory
-ENV APP_HOME /opt
-ENV SERVICE_HOME $APP_HOME/services/<SERVICE_NAME>
-
-# copy `facefx-worker` Poetry files
-WORKDIR $SERVICE_HOME
-COPY pyproject.toml .
-COPY poetry.lock .
-
-# create a dummy package to satisfy Poetry
-RUN mkdir -p src/<SERVICE_NAME> && touch src/<SERVICE_NAME>/__init__.py
-
-# install requirements
-RUN poetry install --only main -n && rm -rf ~/.cache/pypoetry/cache
-
-# copy source code
-COPY src src
-
-# store the git branch and commit hash as env variables
-ARG GIT_BRANCH
-ARG GIT_COMMIT_HASH
-ENV GIT_BRANCH=${GIT_BRANCH}
-ENV GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
-
-# set starting command
-WORKDIR $SERVICE_HOME
-CMD poetry run python src/run.py
+FROM python:3.14-slim-trixie AS runtime
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PATH="/app/.venv/bin:$PATH"
+WORKDIR /app
+COPY --from=builder /app/.venv /app/.venv
+USER 10001:10001
+CMD ["<SERVICE-NAME>"]

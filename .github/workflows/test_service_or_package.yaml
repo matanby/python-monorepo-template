@@ -1,41 +1,42 @@
-name: Validate Code
+name: Validate One Workspace Member
 
 on:
   workflow_dispatch:
     inputs:
       target_path:
-        description: 'The path of the package or service to validate'
+        description: "Workspace member path, for example services/my-service"
         required: true
+        type: string
+
+permissions:
+  contents: read
 
 jobs:
-  validate_code:
+  validate:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11"]
+    timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Install Poetry
-      run: pip install poetry
-
-    - name: Install Dependencies
-      run: poetry install
-      working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
-
-    - name: Lint
-      run: make -f Makefile lint
-      working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
-
-    - name: Format
-      run: make -f Makefile format args="--check"
-      working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
-
-    - name: Test
-      run: make -f Makefile test
-      working-directory: ${{ github.workspace }}/${{ github.event.inputs.target_path }}
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: "0.13.4"
+          python-version: "3.14"
+          enable-cache: true
+      - run: uv sync --all-packages --locked
+      - name: Validate selected member
+        env:
+          TARGET_PATH: ${{ inputs.target_path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$TARGET_PATH" =~ ^(services|packages)/[a-z][a-z0-9_-]*$ ]] || [[ ! -f "$TARGET_PATH/pyproject.toml" ]]; then
+            echo "Expected an existing services/<name> or packages/<name> workspace member" >&2
+            exit 1
+          fi
+          cd "$TARGET_PATH"
+          uv run --locked ruff check src tests
+          uv run --locked ruff format --check src tests
+          uv run --locked ty check src tests
+          uv run --locked pytest tests

@@ -1,24 +1,29 @@
-install:  ## Install dependencies
+.DEFAULT_GOAL := help
+.PHONY: help typecheck install format lint test run docker-build docker-run
+
+install:  ## Install
 	@bash scripts/install.sh $(args)
 
-run:  ## Run the service
-	@bash scripts/run.sh $(args)
-
-format:  ## Format the code
+format:  ## Format
 	@bash scripts/format.sh $(args)
 
-lint:  ## Lint the code
+lint:  ## Lint
 	@bash scripts/lint.sh $(args)
 
-test:  ## Run the tests
+test:  ## Test
 	@bash scripts/test.sh $(args)
 
-docker-build:  ## Build the docker image
+run:  ## Run
+	@bash scripts/run.sh $(args)
+
+docker-build:  ## Docker build
 	@bash scripts/docker-build.sh $(args)
 
-docker-run:  ## Run the docker image
+docker-run:  ## Docker run
 	@bash scripts/docker-run.sh $(args)
 
-.PHONY: help
-help:
-	@awk 'BEGIN {FS = ":.*##"; printf "Usage: make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+typecheck:  ## Check Python types
+	@bash scripts/typecheck.sh $(args)
+
+help:  ## Show available commands
+	@awk 'BEGIN {FS = ":.*##"} /^[a-zA-Z_-]+:.*##/ {printf "  %-16s %s\n", $$1, $$2}' $(MAKEFILE_LIST)

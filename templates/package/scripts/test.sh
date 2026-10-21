@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-
-PACKAGE_ROOT=$(realpath $(dirname $0)/../)
-TESTS_FOLDER=$PACKAGE_ROOT/tests
-ARGS=$@
-
-poetry run pytest -rav $TESTS_FOLDER $ARGS
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec uv run --locked pytest tests "$@"
