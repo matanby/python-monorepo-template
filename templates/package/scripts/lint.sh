@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-
-PACKAGE_ROOT=$(realpath $(dirname $0)/../)
-SRC_FOLDER=$PACKAGE_ROOT/src
-TESTS_FOLDER=$PACKAGE_ROOT/tests
-ARGS=$@
-
-poetry run ruff $SRC_FOLDER $TESTS_FOLDER $ARGS
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec uv run --locked ruff check src tests "$@"

@@ -1,5 +1,5 @@
 def main() -> None:
-    print("Hello from <SERVICE-NAME>!")  # noqa: T201
+    print("Hello from <SERVICE-NAME>!")
 
 
 if __name__ == "__main__":

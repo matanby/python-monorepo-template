@@ -1,19 +1,26 @@
-[tool.poetry]
+[project]
 name = "<PACKAGE-NAME>"
 version = "0.1.0"
+license = "MIT"
+license-files = ["LICENSE"]
 description = ""
-authors = []
-packages = [{include = "<PACKAGE_NAME>", from = "src"}]
-
-[tool.poetry.dependencies]
-python = "^3.11"
-
-[tool.poetry.group.dev.dependencies]
-black = "*"
-pre-commit = "*"
-pytest = "*"
-ruff = "*"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/<PACKAGE_NAME>"]
+
+[tool.ruff]
+extend = "../../pyproject.toml"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --import-mode=importlib"
+
+[tool.ty.environment]
+python-version = "3.12"

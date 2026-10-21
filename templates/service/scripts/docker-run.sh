@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-
-ARGS="$@"
-
-docker run -it --rm \
-  --name <SERVICE-NAME> \
-  <SERVICE-NAME>:latest \
-  $ARGS
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec docker run --rm --init "<SERVICE-NAME>:latest" "$@"

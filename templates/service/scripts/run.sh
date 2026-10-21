@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-
-ARGS="$@"
-poetry run python src/run.py $ARGS
+set -euo pipefail
+cd "$(dirname "$0")/.."
+exec uv run --locked --package "<SERVICE-NAME>" "<SERVICE-NAME>" "$@"
