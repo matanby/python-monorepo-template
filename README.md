@@ -22,7 +22,7 @@ Dependency management, tests, formatting, and Docker builds are ready to go.
 
 ## What you get
 
-- 🐍 **Modern Python.** Python 3.14 by default, with CI checks for 3.12–3.15.
+- 🐍 **Modern Python.** Python 3.15 by default, with CI checks for 3.12–3.15.
 - 🗂️ **One repo, many projects.** Keep your services and shared libraries together.
 - ⚡ **Fast setup with uv.** Manage dependencies and virtual environments in one place.
 - 🔒 **One shared lockfile.** Give everyone the same dependency versions.
@@ -49,7 +49,7 @@ Python 3.12+ available as `python3`. See [Working without Make](#working-without
 for direct commands, including on Windows.
 
 ```sh
-# Set up the workspace (uv downloads Python 3.14 if needed)
+# Set up the workspace (uv downloads Python 3.15 if needed)
 uv sync --all-packages --locked
 
 # Create a library and a service that can use it
